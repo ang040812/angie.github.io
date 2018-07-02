@@ -1,20 +1,17 @@
-language:
-      - java
-  services:
-      - mysql
-  jdk:
-      - oraclejdk8
-      - openjdk7
-  before_install:
-      - mysql -u root < bbdd_Travis.sql
-  script:
-      - mvn clean test 
-  cache:
-      directories:
-          - $HOME/.m2
-  dist:
-      - trusty
-  sudo:
-      - false
-  notifications:
-      - email: false
+sudo: required
+
+language: bash
+
+branches:
+  only:
+  - master
+  - production
+
+services:
+  - docker
+
+before_install:
+   - docker build -t DOCKER-ID/mads-todolist-2017:0.2 .
+
+script:
+   - docker run --rm DOCKER-ID/mads-todolist-2017:0.2 /bin/bash -c "sbt test"
